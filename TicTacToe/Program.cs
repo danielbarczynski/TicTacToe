@@ -6,7 +6,7 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-           
+
             char[,] startBoard = {
             { '1', '2', '3' },
             { '4', '5', '6' },
@@ -19,7 +19,7 @@ namespace TicTacToe
 
             bool gameEnded = false;
             bool player1Move = true; // true - player 1 move, false - player 2 move
-                                     
+
             // Loop over rounds
 
             for (int round = 0; round < gameBoard.Length; round++)
@@ -40,7 +40,7 @@ namespace TicTacToe
                 if (gameEnded)
                     break;
             }
-            
+
             // End the game
 
             Console.Clear();
@@ -48,17 +48,17 @@ namespace TicTacToe
             Console.Write("Game ended!");
 
             // TODO: print who won
+        }
 
         static void Draw(char[,] board)
+        {
+            for (int i = 0; i < board.GetLength(0); i++) // for length
             {
-                for (int i = 0; i < board.GetLength(0); i++) // for length
-                {
-                    for (int j = 0; j < board.GetLength(1); i++) // for width
-                        Console.Write(board[i, j]); // get element from the [i,j] - width and lenght
-                    Console.WriteLine(); // print whole row [i,j] then jump to another line
+                for (int j = 0; j < board.GetLength(1); j++) // for width
+                    Console.Write(board[i, j]); // get element from the [i,j] - width and lenght
+                Console.WriteLine(); // print whole row [i,j] then jump to another line
                     
-                    // if "writeline" every element in other line, I want whole row
-                }
+                // if "writeline" every element in other line, I want whole row
             }
         }
     }

@@ -7,11 +7,12 @@ namespace TicTacToe
         static void Main(string[] args)
         {
            
-             char[,] startBoard = {
-             { '1', '2', '3' },
-             { '4', '5', '6' },
-             { '7', '8', '9' }
-             };
+            char[,] startBoard = {
+            { '1', '2', '3' },
+            { '4', '5', '6' },
+            { '7', '8', '9' }
+            };
+
             char[,] gameBoard = startBoard.Clone() as char[,];
 
             // Flags
@@ -44,7 +45,9 @@ namespace TicTacToe
             Console.Clear();
             Draw(gameBoard);
             Console.Write("Game ended!");
- 
+
+            // TODO: print who won
+
         }
     }
 }

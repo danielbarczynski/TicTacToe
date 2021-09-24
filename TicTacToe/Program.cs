@@ -26,6 +26,7 @@ namespace TicTacToe
             {
                 Console.Clear();
                 Draw(gameBoard);
+
                 if (player1Move)
                 {
                     // TODO: player 1 move
@@ -48,6 +49,17 @@ namespace TicTacToe
 
             // TODO: print who won
 
+        static void Draw(char[,] board)
+            {
+                for (int i = 0; i < board.GetLength(0); i++) // for length
+                {
+                    for (int j = 0; j < board.GetLength(1); i++) // for width
+                        Console.Write(board[i, j]); // get element from the [i,j] - width and lenght
+                    Console.WriteLine(); // print whole row [i,j] then jump to another line
+                    
+                    // if "writeline" every element in other line, I want whole row
+                }
+            }
         }
     }
 }

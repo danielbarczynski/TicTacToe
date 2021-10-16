@@ -8,8 +8,8 @@ namespace TicTacToe
         {
 
             char[,] startBoard = {
-            { '1', '2', '3' },
-            { '4', '5', '6' },
+            { '1', '2', '3' }, // only i row
+            { '4', '5', '6' }, // now another row in j, so there it is [,]
             { '7', '8', '9' }
             };
 
@@ -30,12 +30,12 @@ namespace TicTacToe
                 if (player1Move)
                 {
                     // TODO: player 1 move
-                    player1Move = false;
+                    player1Move = false; // after completed move, changing to player2
                 }
                 else
                 {
                     // TODO: player 2 move
-                    player1Move = true;
+                    player1Move = true; // after completed move, changing to player1 - back to if (player1Move)
                 }
                 if (gameEnded)
                     break;
@@ -52,7 +52,7 @@ namespace TicTacToe
 
         static void Draw(char[,] board)
         {
-            for (int i = 0; i < board.GetLength(0); i++) // for length
+            for (int i = 0; i < board.GetLength(0); i++) // for height, always starting from 0 (0)
             {
                 for (int j = 0; j < board.GetLength(1); j++) // for width
                     Console.Write(board[i, j]); // get element from the [i,j] - width and lenght
@@ -60,6 +60,72 @@ namespace TicTacToe
                     
                 // if "writeline" every element in other line, I want whole row
             }
+        }
+
+        interface IMoving
+        {
+            bool Makemove(char[,] startBoard, char[,] gameBoard);
+        }
+
+        abstract class Player // abstract means that we cannot make object to this class, share part for AI and player
+        {
+            public string Name { get; set; }
+            public char Symbol { get; set; } // X or O
+
+            public bool CheckIfPlayerWon (char[,] gameBoard) // checking for XXX or OOO in one row/line/diagonally
+            {
+                int height = gameBoard.GetLength(0);
+                int width = gameBoard.GetLength(1); // to save some time, two variables
+                if (height != width)
+                    throw new Exception("The board is not a square!"); // our board is a square, it is just protection if whatever happens
+
+                // Check rows
+
+                for (int i = 0; i < height; i++)
+                {
+                    int rowSum = 0; // starting from 0
+                    for (int j = 0; j < width; j++)
+                    {
+                        if (gameBoard[i, j] == Symbol)
+                            rowSum++;
+                    }
+                    if (rowSum == width) // could also say 3, but we stay to width/height just like in i < board.GetLength 
+                        return true; // return finish the method, executes only rowSum == width
+                }
+
+                // Check colums
+
+                for (int j = 0; j < width; j++) // starting with j height because of checkmate in columns
+                {
+                    int colSum = 0;
+                    for (int i = 0; i < height; i++)
+                    {
+                        if (gameBoard[i, j] == Symbol)
+                            colSum++;
+                    }
+                    if (colSum == height)
+                        return true;
+                }
+
+                // Check diagonals
+
+                int diagSumA = 0;
+                int diagSumB = 0;
+                for (int k = 0; k < width; k++)
+                {
+                    if (gameBoard[k, k] == Symbol) // for [0,0] [1,1] [2,2]
+                        diagSumA++;
+                    if (gameBoard[k, width - 1 - k] == Symbol) // for [0,2] [1,1] [2,0] 
+                        diagSumB++; // numbers on table are 0,1,2 width is 3 so: width - 1 and also k \\\ e.g k=0 [k, 2-k] 
+                }
+                if (diagSumA == width || diagSumB == width) // || means or
+                    return true;
+
+                // otherwise, not win yet
+
+                return false;
+            }
+
         }
     }
 }

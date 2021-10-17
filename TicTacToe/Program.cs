@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading; // for thread sleep
 
 namespace TicTacToe
 {
@@ -62,7 +63,16 @@ namespace TicTacToe
             Draw(gameBoard);
             Console.Write("Game ended!");
 
-            // TODO: print who won
+            if (gameEnded)
+            {
+                if (player1Move)
+                    Console.WriteLine(p2.Name + " won!");
+                else
+                    Console.WriteLine(p1.Name + " won!");
+            }
+            else
+                Console.WriteLine("Draw!");
+            
         }
 
         static void Draw(char[,] board)
@@ -140,25 +150,69 @@ namespace TicTacToe
 
             return false;
         }
+
+        public bool PlaceSymbol (char c, char[,] startBoard, char[,] gameBoard) // char c number on board with symbol
+        {
+            int height = gameBoard.GetLength(0);
+            int width = gameBoard.GetLength(1);
+
+            if (height != startBoard.GetLength(0) || width != startBoard.GetLength(1))
+                throw new Exception("Board is not a square!");
+
+            for (int i = 0; i < height; i++) // checking for symbol, also if is not placed yet in the same spot, to prevent double marking on the same cordinates (cheating)
+                for (int j = 0; j < width; j++)                
+                    if (gameBoard[i, j] == c && gameBoard[i, j] == startBoard[i, j] ) // && means and
+                    {
+                        gameBoard[i, j] = Symbol; // placin our symbol on the board
+                        return true;
+                    }
+
+            // Otherwise, return without success // if player didnt place symbol on the board or on available place (game end?)
+
+            return false;
+            
+        }
     }
 
     class HumanPlayer : Player, IMoving // inherit after class Player and implement interface IMoving 
     {
         public bool MakeMove(char[,] startBoard, char[,] gameBoard)
         {
-            // TODO: human move         
-            bool result = CheckIfPlayerWon(gameBoard);
-            return result;
+            // Ask human player to enter a place untihl he picks an available one, do it until result
+            
+            char chosenPlace;
+
+            do // loop do, always do first, then thinks and do it again
+            {
+                Console.Write("Choose an empty place: ");
+                chosenPlace = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+            }
+            while (!PlaceSymbol(chosenPlace, startBoard, gameBoard)); // can plice to "while" because it returns true or false and move to further code, we placed method!
+            
+            // ! means negation like minus // so while is false and it breaks the loop, thats good player wont place symbol twice in a row
+            // it depends on first value - true or false - then there is negation
+            
+            return CheckIfPlayerWon(gameBoard);            
         }
     }
     class ComputerPlayer : Player, IMoving // inherit after class Player and implement interface IMoving 
     {
         public bool MakeMove(char[,] startBoard, char[,] gameBoard)
         {
-            // TODO: computer move
+            Random rnd = new Random();
+            char chosenPlace;
 
-            bool result = CheckIfPlayerWon(gameBoard);
-            return result;
+            do
+            {
+                int p = rnd.Next(1, gameBoard.Length + 1); // random 1-9
+                chosenPlace = p.ToString()[0]; // convert digit to char, [0] first char of array
+            }
+            while (!PlaceSymbol(chosenPlace, startBoard, gameBoard));
+
+            Thread.Sleep(2000); // wait 2 seconds for computer move         
+
+            return CheckIfPlayerWon(gameBoard);            
         }
     }
 }
